@@ -15,17 +15,14 @@
   - 자바스크립트는 매우 flexible 한 언어이다.
     말도 안되는 멍청한 코드를 허용해 줌. → 개발자를 최대한 배려해준다,,,,ㅎ
 
-        ```javascript
         [1, 2, 3, 4] + false
 
         '1, 2, 3, 4false'
-        ```
 
   - 자바스크립트는 아래와 같이 이상한 입력값을 넣어도 코드 실행을 막아주지 않음
     → divide 함수는 숫자 두개를 입력값으로 보내야 하는데 하나만 보냈음에도 코드가 실행되버림
     → 다른 언어에서는 이런 코드는 절대실행되지 않음
 
-        ```javascript
         function divide(a, b) {
             return a / b
         }
@@ -35,7 +32,6 @@
 
         divide('xxxxxxxx')
         NaN
-        ```
 
 - 자바스크립트의 런타임에러
   - 좋은 언어라면, nico라는 객체를 분석해서 nico에는 hello() 함수가 없다는 걸 코드가 실행되기전에 띄워줄 것! 이 경우, 코드 실행자체가 안되는 언어들도 있음 (컴파일 실패)
@@ -274,4 +270,222 @@ function hello(name: string | number) {
     // 이코드블럭은 실행되면 안됌 !
   }
 }
+```
+
+<br><br>
+
+# 3. Functions
+
+## 1. Call Signitures
+
+- 타입스크립트에게 함수가 어떻게 호출되는지 설명해주는 부분
+  - 함수의 파라미터는 어떤 타입인지?
+  - 함수의 리턴 타입은 무엇인지?
+
+함수의 call signature 타입 만들기
+
+```ts
+// call signature
+type Add = (a: number, b: number) => number;
+const add: Add = (a, b) => a + b;
+```
+
+## 2. Overloading
+
+- 함수가 여러 개의 call signatures를 가지고 있을 때 발생시킨다.
+
+```ts
+type Add = {
+  (a: number, b: number): number;
+  (a: number, b: string): number;
+};
+
+const add: Add = (a, b) => {
+  if (typeof b === 'string') return a;
+  return a + b;
+};
+```
+
+```ts
+type Config = {
+  path: string;
+  state: object;
+};
+
+type Push = {
+  (path: string): void;
+  (config: Config): void;
+};
+
+const push: Push = (config) => {
+  // string이나 Config 타입을가지고 있다면
+  // 아래 if문을 통해 내부에서 그 타입을 체크하도록 해준다
+  if (typeof config === 'string') {
+    console.log(config); // string
+  } else {
+    console.log(config.path); // config타입 객체
+  }
+};
+```
+
+```ts
+type Add = {
+  (a: number, b: number): number;
+  (a: number, b: number, c: number): number;
+};
+
+const add: Add = (a, b, c?: number) => {
+  if (c) return a + b + c;
+  return a + b;
+};
+
+add(1, 2);
+add(1, 2, 3);
+```
+
+## 3. Polymorphism 다형성
+
+- generic이란 ?
+  - call signature를 작성할 때, 들어올 값들의 확실한 타입을 모를 때 사용
+  - placeholder를 사용해서 작성한 코드의 타입 기준으로 변경해줌
+  - TypeScript가 나의 코드를 보고 추론하여 알아냄
+
+```ts
+type SuperPrint = <T, M>(arr: T[], b: M) => T;
+
+const superPrint: SuperPrint = (arr) => arr[0];
+
+const a = superPrint([1, 2, 3, 4], 'x');
+const b = superPrint([true, false, true], 1);
+const c = superPrint(['a', 'b', 'c'], false);
+const d = superPrint([1, 2, true, false], []);
+```
+
+제네릭을 사용하는 예시!
+
+```ts
+type Player<E> = {
+  name: string;
+  extraInfo: E;
+};
+
+type NicoExtra = {
+  favFood: string;
+};
+
+type NicoPlyaer = Player<NicoExtra>;
+
+const nico: NicoPlyaer = {
+  name: 'nico',
+  extraInfo: {
+    favFood: 'kimchi',
+  },
+};
+
+const lynn: Player<null> = {
+  name: 'lynn',
+  extraInfo: null,
+};
+
+// type은 재사용이 가능함!
+// 제네릭 덕분~
+
+function printAllNumbers(arr: number[]) === (arr: Array<number>)
+// 오른쪽 제네릭 형식으로도 작성 가능
+```
+
+<br><br>
+
+# 4. Classes
+
+```ts
+class Player {
+  constructor(private firstName: string, private lastName: string, public nickname: string) {}
+}
+
+const nico = new Player('nico', 'las', '니꼬');
+nico.firstName; // error (firstName은 private이기 때문)
+nico.nickname; // 가능
+```
+
+```ts
+// 추상클래스 : 다른 클래스가 상속받을 수 있는 클래스
+abstract class User {
+  constructor(
+    private firstName: string, //
+    private lastName: string, //
+    protected nickname: string //
+  ) {}
+
+  abstract getNickName(): void;
+  getFullName() {
+    return `${this.firstName} ${this.lastName}`;
+    //getFullName 메소드의 implementation(구현)
+  }
+}
+
+// const nico = new User('nico', 'las', '니꼬');
+// error
+// ts가 추상클래스의 인스턴스를 만들 수 없다고 경고함
+
+class Player extends User {
+  getNickName() {
+    console.log(this.nickname); // protected이기때문에 사용가능
+  }
+}
+const nico = new Player('nico', 'las', '니꼬');
+nico.getFullName();
+```
+
+- 추상클래스 : 오직 다른 클래스가 상속받을 수 있는 클래스 그러나, 직접적으로 새로운 인스턴스 만들기는 불가
+- 추상메소드 : 추상클래스를 상속받는 모든 것들이 구현해야하는 메소드
+
+- private property
+  - 인스턴스 밖에서 접근 불가
+  - 다른 자식 클래스에서 접근 불가
+  - 필드가 외부로부터는 보호되지만, 자식 클래스에서 사용 가능하게 하고 싶다면?
+    -> 'protected'를 사용하면됨!
+
+<br>
+
+| 구분         | 선언한 클래스 내 | 상속받은 클래스 내 | 인스턴스 |
+| ------------ | :--------------: | :----------------: | :------: |
+| private      |       ⭕️        |         ❌         |    ❌    |
+| protected    |       ⭕️        |        ⭕️         |    ❌    |
+| public(기본) |       ⭕️        |        ⭕️         |   ⭕️    |
+
+<br>
+
+예제)
+
+```ts
+type Words = {
+  [key: string]: string;
+};
+
+class Dict {
+  private words: Words;
+  constructor() {
+    this.words = {};
+  }
+  add(word: Word) {
+    if (this.words[word.term] === undefined) {
+      this.words[word.term] = word.def;
+    }
+  }
+  def(term: string) {
+    return this.words[term];
+  }
+}
+
+class Word {
+  constructor(public term: string, public def: string) {}
+}
+
+const kimchi = new Word('kimchi', '한국의 음식');
+
+const dict = new Dict();
+
+dict.add(kimchi);
+dict.def('kimchi');
 ```
