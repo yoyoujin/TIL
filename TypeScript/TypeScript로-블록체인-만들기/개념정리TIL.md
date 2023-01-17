@@ -396,7 +396,9 @@ function printAllNumbers(arr: number[]) === (arr: Array<number>)
 
 <br><br>
 
-# 4. Classes
+# 4. Classes And Interfaces
+
+## 1. Classes
 
 ```ts
 class Player {
@@ -417,6 +419,7 @@ abstract class User {
     protected nickname: string //
   ) {}
 
+  // 추상메소드
   abstract getNickName(): void;
   getFullName() {
     return `${this.firstName} ${this.lastName}`;
@@ -439,6 +442,8 @@ nico.getFullName();
 
 - 추상클래스 : 오직 다른 클래스가 상속받을 수 있는 클래스 그러나, 직접적으로 새로운 인스턴스 만들기는 불가
 - 추상메소드 : 추상클래스를 상속받는 모든 것들이 구현해야하는 메소드
+
+  - 추상메소드가 있는 경우, 추상 클래스를 상속받는 클래스에서 추상메소드를 구현해주어야한다.
 
 - private property
   - 인스턴스 밖에서 접근 불가
@@ -464,7 +469,7 @@ type Words = {
 };
 
 class Dict {
-  private words: Words;
+  private words: Words; // 객체
   constructor() {
     this.words = {};
   }
@@ -479,13 +484,100 @@ class Dict {
 }
 
 class Word {
-  constructor(public term: string, public def: string) {}
+  constructor(public readonly term: string, public readonly def: string) {}
 }
 
 const kimchi = new Word('kimchi', '한국의 음식');
-
 const dict = new Dict();
 
 dict.add(kimchi);
 dict.def('kimchi');
+
+kimchi.def = 'xxxx';
+// error
+// def가 readonly이기 때문에 수정이 불가함
 ```
+
+## 2. Interfaces
+
+- 타입
+  - 내가 원하는 모든 것이 될 수 있다.<br>
+    ex) string의 배열, 특정 값, Player타입처럼 object의 모양을 특정하고 싶을 때 <br><br>
+- ## 인터페이스
+
+  - 인터페이스는 오직 한가지 용도를 가지고 있음
+    -> ✨ 오브젝트의 모양을 특정해주기 위한 것 ✨
+  - 리액트를 이용해서 작업을 할 때 자주 사용됨
+
+  ```ts
+  // concrete type인 string이 아니라, 특정 값들을 가질 수 있다.
+  type Team = 'red' | 'blue' | 'yellow';
+  type Health = 1 | 5 | 10;
+
+  // type과 interface
+  // Player와 Person은 같은 역할을 하고 있다
+  // ts에게 오브젝트의 모양을 설명함
+  type Player = {
+    nickname: string;
+    team: Team;
+    health: Health;
+  };
+  interface Person {
+    nickname: string;
+    team: Team;
+    health: Health;
+  }
+
+  // interface Hello = string
+  // error - doesn't work
+
+  const nico: Player = {
+    nickname: 'nicco',
+    team: 'yellow',
+    health: 10,
+  };
+  ```
+
+  ```ts
+  interface User {
+    name: String;
+  }
+
+  // 클래스와 비슷함
+  interface Player extends User {}
+
+  // type User = {
+  //     name: string
+  // }
+
+  // type Player = User & {
+
+  // }
+
+  const nico: Player = {
+    name: 'nico',
+  };
+  ```
+
+  ```ts
+  interface User {
+    name: string;
+  }
+
+  interface User {
+    lastName: string;
+  }
+
+  interface User {
+    health: number;
+  }
+
+  const nico: User = {
+    name: 'nco',
+    lastName: 'sdf',
+    health: 10,
+  };
+
+  // 인터페이스를 각각 3번 만들어도, 타입스크립트가 알아서 하나로 합쳐줌
+  // 타입은 안됨 ❌
+  ```
