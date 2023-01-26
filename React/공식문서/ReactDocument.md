@@ -135,7 +135,34 @@ function Clock(props) {
 
 function tick() {
   root.render(<Clock date={new Date()} />);
+  s;
 }
 
 setInterval(tick, 1000);
+```
+
+- Clock 컴포넌트를 완전히 재사용하고 캡슐화하기
+- 이 컴포넌트는 스스로 타이머를 설정하고, 매초 스스로 업데이트 한다.
+  - Clock이 타이머를 설정하고 매초 UI 업데이트하는 것이 Clock의 구현 세부사항이 되어야한다.
+  - State는 props와 유사하지만, 비공개이며 컴포넌트에 의해 완전히 제어된다.
+
+### 🙌 함수에서 클래스로 변환하기
+
+1. React.Component를 확장하는 동일한 이름의 ES6 class 생성
+2. render()라고 불리는 빈 메서드 추가
+3. 함수의 내용을 render() 안으로 옮기기
+4. render() 내용 안에 있는 props를 this.props로 변경
+5. 남아있는 빈 함수선언 삭제
+
+```jsx
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.props.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
 ```
