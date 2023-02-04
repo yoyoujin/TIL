@@ -166,3 +166,56 @@ class Clock extends React.Component {
   }
 }
 ```
+
+# 메인컨셉
+
+## Introducing JSX
+
+- JSX는 React '요소'를 생성한다
+- React는 렌더링 로직이 본질적으로 다른 UI 로직과 결합된다는 사실을 수용한다.
+  - 이벤트 처리방식, 시간경과에 따른 상태 변경방식, 데이터 표시 준비 방식 등
+- 컴파일 후 JSX 표현식은 일반 JS 객체로 평가됨
+  <br>
+
+💡 JSX는 HTML보다 JS에 더 가깝기 때문에 React DOM은 HTML 속성 이름 대신 camelCase 속성 명명 규칙을 사용한다.
+
+- 기본적으로 React DOM은 렌더링 하기 전에 JSX에 포함된 모든 값을 이스케이프 처리한다
+  - 모든 것은 렌더링되기 전에 문자열로 변환되며, 이는 XSS(cross-site-scripting) 공격을 방지하는 데 도움이 된다.
+
+### JSX Represents Objects
+
+- Bable은 JSX를 React.createElement() 로 컴파일한다.
+
+- 아래 두개의 예제코드는 동일하다.
+
+1.
+
+```jsx
+const element = <h1 className='greeting'>Hello, world!</h1>;
+```
+
+2.
+
+```jsx
+const element = React.createElement(
+  'h1',
+  { className: 'greeting' },
+  'Hello, world!' //
+);
+```
+
+- React.createElement()는 버그 없는 코드를 작성하는데 도움이 되는 몇가지 검사를 수행하지만, 기본적으로 다음과 같은 객체를 생성한다.
+
+```jsx
+// Note: this structure is simplified
+const element = {
+  type: 'h1',
+  props: {
+    className: 'greeting',
+    children: 'Hello, world!',
+  },
+};
+```
+
+- 이러한 객체를 'React요소'라고 하며, 화면에서 보고싶은 것에 대한 descriptions으로 생각할 수 있다.
+- React는 이러한 객체를 읽고 이를 사용하여 DOM을 구성하고 최신 상태로 유지한다.
