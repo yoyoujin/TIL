@@ -167,6 +167,8 @@ class Clock extends React.Component {
 }
 ```
 
+<br>
+
 # 메인컨셉
 
 ## Introducing JSX
@@ -219,3 +221,26 @@ const element = {
 
 - 이러한 객체를 'React요소'라고 하며, 화면에서 보고싶은 것에 대한 descriptions으로 생각할 수 있다.
 - React는 이러한 객체를 읽고 이를 사용하여 DOM을 구성하고 최신 상태로 유지한다.
+
+## Rendering Elements
+
+- 브라우저 DOM 요소와 달리 React 요소는 일반 객체이며 가볍다.
+- ReactDOM은 React 요소와 일치하도록 DOM을 업데이트한다.
+
+- React 요소를 렌더링하려면 먼저 DOM 요소를 ReactDOM.createRoot()에 전달한 다음, React요소를 root.render()에 전달한다.
+
+```jsx
+const root = ReactDOM.createRoot(document.getElementById('root'));
+const element = <h1>Hello, world</h1>;
+root.render(element);
+```
+
+### Updating the Rendered Element
+
+- React요소는 변경할 수 없다.
+- 요소를 만든 후, 자식이나 속성을 변경할 수 없다.
+  - 요소는 영화의 단일 프레임과 같아서, 특정시점의 UI를 나타낸다.
+
+### React Only Updates What's Necessary
+
+- ReactDOM은 요소와 그 자식을 이전 요소와 비교하여 DOM을 원하는 상태로 만드는데 필요한 업데이트만 적용한다.
