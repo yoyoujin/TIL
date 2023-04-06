@@ -105,3 +105,81 @@ OptionsAPI는 데이터, 속성, 메서드, 라이프사이클 훅 등을 객체
 CompositionAPI는 코드를 기능별로 구성할 수 있게 하며, 관련된 기능을 모듈화하여 재사용성을 높인다. 함수형 프로그래밍의 개념을 활용하여 코드를 작성할 수 있도록 돕고, TypeScript와 같은 언어와 함께 사용하기에도 좋아서 코드의 안정성을 높일 수 있다.
 
 그래서 대규모 앱에서 작성할 때 CompositionAPI를 사용하는 것이 좋을 것 같다. 가독성과 유지보수성 면에서 더 나은 선택이 될 것 같기 때문이다.
+
+<br>
+
+## 속성 바인딩
+
+속성을 동적 값에 바인딩하려면 `v-bind` 디렉티브를 사용한다
+
+```jsx
+<div v-bind:id='dynamicId'></div>
+```
+
+<br>
+
+## [디렉티브](https://v3-docs.vuejs-korea.org/guide/essentials/template-syntax.html#attribute-bindings)
+
+- `v-` 로 시작하는 특수한 속성으로 Vue 템플릿 문법의 일부이다.
+- 컴포넌트의 상태에 접근할 수 있는 JavaScript 표현식
+- 위의 예시에서 콜론 뒷 부분은(id) 디렉티브의 ‘인자’이다.
+- 엘리먼트의 id 속성은 컴포넌트 상태의 dynamicId 속성과 동기화됩니다.
+
+<br>
+
+## 리스트 렌더링
+
+```jsx
+<ul>
+  <li v-for="todo in todos" :key="todo.id">
+    {{ todo.text }}
+  </li>
+</ul>
+```
+
+- `v-for` 디렉티브를 사용하여 자료 배열을 요소로 렌더링 할 수 있다.
+- todo: 현재 반복중인 배열 요소를 나타내는 로컬변수 (v-for 엘리먼트 위 또는 내부에서만 접근가능)
+- 목록을 업데이트하는 방법
+
+  1. 자료 배열에서 변경 메서드(mutating methods) 호출
+
+     todos.value.push(newTodo)
+
+  2. 배열을 새 배열로 교체
+
+     todos.value = todos.value.filter(…)
+
+     <br>
+
+## 데이터 바인딩
+
+🙌 데이터 바인딩을 사용하는 이유
+
+- HTML에 하드코딩 해놓으면 나중에 변경이 어렵기 때문에
+  → 가변적인 데이터들은 하드코딩보다는 데이터로 저장해두는 것이 좋음
+- Vue의 **실시간 자동 렌더링**을 사용하기 위해
+  - Vue는 data를 변경하면, 해당 data와 바인딩되어있는 HTML에도 실시간으로 반영됨
+  - 웹앱같은 사이트를 만들기 좋음!
+
+👉 자주 변할 것 같은 데이터들은 data에 보관하고 HTML에 꽂아넣기!
+
+ex) 아래 쇼핑몰 이름의 경우 변경되는 data가 아니기때문에 데이터바인딩 할 필요❌
+
+👉 (충격) HTML 속성도 데이터 바인딩 가능 -> `:속성=’데이터이름’`
+
+```html
+<template>
+  <h1>{{ logo }}</h1>
+  <div>
+    <h3 :style="fontColor">XX 원룸</h3>
+    <p>{{ price1 }} 만원</p>
+  </div>
+  <div>
+    <h3>XX 원룸</h3>
+    <p>{{ price2 }} 만원</p>
+  </div>
+</template>
+
+export default { name: 'APP', data(){ return { logo: '원룸샵', price1: 80, price2: 40, fontColor:
+'color: blue', } }, components: { } }
+```
