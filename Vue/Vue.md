@@ -157,7 +157,7 @@ CompositionAPI는 코드를 기능별로 구성할 수 있게 하며, 관련된 
 
 - HTML에 하드코딩 해놓으면 나중에 변경이 어렵기 때문에
   → 가변적인 데이터들은 하드코딩보다는 데이터로 저장해두는 것이 좋음
-- Vue의 **실시간 자동 렌더링**을 사용하기 위해
+- Vue의 실시간 자동 렌더링을 사용하기 위해
   - Vue는 data를 변경하면, 해당 data와 바인딩되어있는 HTML에도 실시간으로 반영됨
   - 웹앱같은 사이트를 만들기 좋음!
 
@@ -183,3 +183,85 @@ ex) 아래 쇼핑몰 이름의 경우 변경되는 data가 아니기때문에 �
 export default { name: 'APP', data(){ return { logo: '원룸샵', price1: 80, price2: 40, fontColor:
 'color: blue', } }, components: { } }
 ```
+
+## reactive / watch / ref / computed
+
+### 1. reactive
+
+Vue의 `reactive`는 Vue 3에서 새롭게 도입된 API 중 하나로, 객체나 배열을 반응형으로 만들어주는 함수이다. `reactive` 함수를 사용하여 생성된 반응형 객체는 Vue의 반응성 시스템에 의해 추적되고, 해당 객체의 프로퍼티 값이 변경될 때마다 자동으로 다시 렌더링되는 등의 처리가 가능해진다.
+
+`reactive` 함수는 다음과 같은 방법으로 사용할 수 있다.
+
+```jsx
+import { reactive } from 'vue';
+
+const state = reactive({
+  count: 0,
+  message: 'Hello world!',
+  nested: {
+    foo: 'bar',
+  },
+  list: [1, 2, 3],
+});
+```
+
+위 코드에서 `reactive` 함수를 사용하여 `state` 객체를 생성하고 있다. `state` 객체는 `count`, `message`, `nested`, `list`와 같은 프로퍼티들을 갖고 있으며, 이들 프로퍼티는 모두 반응형으로 만들어졌다. 따라서 `state` 객체의 어떤 프로퍼티 값이 변경되면, 해당 변경사항이 Vue의 반응성 시스템에 의해 감지되고, 자동으로 다시 렌더링된다.
+
+`reactive` 함수는 Vue의 `watch` 함수와 함께 사용되어 객체나 배열의 변경사항을 감시하고 처리할 수 있다. 예를 들어, 다음과 같은 방법으로 `state` 객체의 `count` 프로퍼티를 감시할 수 있다.
+
+```jsx
+import { reactive, watch } from 'vue';
+
+const state = reactive({
+  count: 0,
+  message: 'Hello world!',
+  nested: {
+    foo: 'bar',
+  },
+  list: [1, 2, 3],
+});
+
+watch(
+  () => state.count,
+  (newValue, oldValue) => {
+    console.log(`count changed from ${oldValue} to ${newValue}`);
+  }
+);
+```
+
+위 코드에서 `watch` 함수를 사용하여 `state` 객체의 `count` 프로퍼티를 감시하고 있다. `watch` 함수의 첫 번째 인자로는 감시 대상의 getter 함수를, 두 번째 인자로는 감시 대상이 변경될 때 호출될 콜백 함수를 전달하면 된다. 따라서 위 코드에서는 `state.count`의 값이 변경될 때마다 콘솔에 변경된 값을 출력하는 콜백 함수가 호출된다.
+
+### 2. watch
+
+`watch` 함수는 지정한 대상을 감시하고, 대상이 변경될 때마다 콜백 함수를 호출하는 API이다. 대상은 다양한 형태로 지정할 수 있으며, `watch` 함수를 사용하여 객체나 배열의 변경사항을 감시할 수 있다.
+
+`watch` 함수는 다음과 같은 형태로 사용할 수 있다.
+
+```jsx
+watch(source, callback, options);
+```
+
+- `source`: 감시 대상의 getter 함수 또는 대상 객체
+- `callback`: 감시 대상이 변경될 때 호출될 콜백 함수
+- `options`: 옵션 객체 (생략 가능)
+
+`source` 인자에는 감시 대상을 지정한다. 이 인자는 함수나 객체 모두 가능하다. 함수를 사용할 경우, 이 함수는 감시 대상의 값을 반환하는 getter 함수여야 한다. 객체를 사용할 경우, 객체의 프로퍼티를 감시한다.
+
+`callback` 인자에는 감시 대상이 변경될 때마다 호출될 콜백 함수를 지정한다. 이 콜백 함수는 두 개의 인자를 받는데, 첫 번째 인자는 변경된 값이고 두 번째 인자는 이전 값이다.
+
+- `watch` 함수를 사용하여 `count` 변수를 감시하는 예제
+
+```jsx
+import { watch } from 'vue';
+
+const count = ref(0);
+
+watch(
+  () => count.value,
+  (newValue, oldValue) => {
+    console.log(`count changed from ${oldValue} to ${newValue}`);
+  }
+);
+```
+
+위 코드에서는 `count` 변수를 `watch` 함수를 사용하여 감시하고 있다. `watch` 함수의 첫 번째 인자로는 `count` 변수의 값을 반환하는 getter 함수를 전달하고, 두 번째 인자로는 감시 대상이 변경될 때 호출될 콜백 함수를 전달하고 있다. 콜백 함수에서는 변경된 값과 이전 값이 출력된다.
