@@ -12,3 +12,60 @@
 - 자바스크립트 프로젝트를 타입스크립트로 전환하는 것이 아니라면, 새 프로젝트를 시작할 때 `noImplicitAny`를 설정하는 것이 좋다.
 - 'undefined는 객체가 아닙니다' 같은 런타임 오류를 방지하기 위해 `strictNullChecks`를 설정하는 것이 좋다.
 - 타입스크립트에서 엄격한 체크를 하고싶다면 strict 설정을 고려해야 한다.
+
+```ts
+//tsconfig.json
+"noImplicitAny": true,
+"strictNullChecks": true,
+```
+
+## item3. 코드 생성과 타입이 관계없음을 이해하기
+
+- 타입스크립트 타입은 런타임 동작이나 성능에 영향을 주지 않는다.
+  - 타입과 타입연산자는 자바스크립트 변환 시점에 제거된다.
+- 타입 오류가 존재하더라도 코드생성(컴파일)은 가능하다.
+- 타입은 런타임에 사용할 수 없다. 런타임에 타입을 지정하려면, 타입 정보 유지를 위한 별도의 방법이 필요하다.
+  - 태그된 유니온과 속성 체크 방법을 많이 사용 (아래 예시코드 참고)
+
+```ts
+interface Square {
+  width: number;
+}
+interface Rectangle extends Square {
+  height: number;
+}
+type Shape = Square | Rectangle;
+
+function calculateArea(shape: Shape) {
+  if ('height' in shape) {
+    // Rectangle
+    return shape.width * shape.height;
+  } else {
+    // Square
+    return shape.width * shape.width;
+  }
+}
+```
+
+```ts
+interface Square {
+  kind: 'square';
+  width: number;
+}
+interface Rectangle {
+  kind: 'rectangle';
+  height: number;
+  width: number;
+}
+type Shape = Square | Rectangle;
+
+function calculateArea(shape: Shape) {
+  if (shape.kind === 'rectangle') {
+    // Rectangle
+    return shape.width * shape.height;
+  } else {
+    // Square
+    return shape.width * shape.width;
+  }
+}
+```
