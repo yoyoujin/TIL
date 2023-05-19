@@ -69,3 +69,25 @@ function calculateArea(shape: Shape) {
   }
 }
 ```
+
+## Type Alias vs Interface
+
+1. 확장 상속 방법
+
+- interface는 `extends` 키워드를 통해 확장된다.
+- Type Alias같은 경우 `&(intersection Type)`를 이용한다.
+
+2. 타입 지정 범위
+
+- interface는 타입만 지정할 수 있지만 Type Alias는 원시값이나 Union Type, Tuple 등도 타입으로 지정할 수 있다.
+
+3. 선언 병합, 자동확장
+
+- interface같은 경우 동일한 이름의 interface가 생성되면 컴파일러가 선언된 개별적인 인터페이스를 하나의 정의로 확장한다. 하지만 Type Alias는 확장하지 않는다.
+  👉 결론: Type과 Interface 둘다 기능은 비슷하지만 공식문서를 보면 Interface를 사용하고 union, tuple 등이 필요한 경우 type을 사용하라는 내용이 존재한다.
+
+## 제네릭
+
+- 재사용성이 높은 컴포넌트를 만들 때 자주 활용되는 특징이 있다.
+- 한가지 타입보다, 여러가지 타입에서 동작하는 컴포넌트를 생성하는데 사용된다.
+- 제네릭은 타입을 마치 함수의 파라미터처럼 사용하는 것을 의미한다.
