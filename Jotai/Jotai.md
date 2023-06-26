@@ -15,3 +15,26 @@
 
 - Jotai는 최소한의 API를 가지고 있으며, TypeScript 지향적이다.
   모든 상태에 전역적으로 접근할 수 있고 파생된 상태를 쉽게 구현할 수 있으며 불필요한 리렌더링이 자동적으로 제거된다.
+  <br><br>
+
+## useAtom
+
+- 상태의 원자 값을 읽는다.
+- useState와 마찬가지로 원자 값과, 업데이트 함수를 튜플 형태로 반환한다.
+- useAtom을 통해 아톰이 사용된 후에만 초기 값이 state에 저장된다.
+- 만약 파생된 아톰이라면, 읽기 함수가 호출되어 초기값을 계산한다.
+
+```jsx
+const stableAtom = atom(0);
+const Component = () => {
+  const [atomValue] = useAtom(atom(0)); // This will cause an infinite loop
+  const [atomValue] = useAtom(stableAtom); // This is fine
+  const [derivedAtomValue] = useAtom(
+    useMemo(
+      // This is also fine
+      () => atom((get) => get(stableAtom) * 2),
+      []
+    )
+  );
+};
+```
