@@ -72,3 +72,50 @@ Squoosh 같은 이미지 크기를 암축하고 줄여주는 웹앱 같은 것�
 - WebP 및 AVIF와 같은 새로운 형식의 성능 > PNG
 - 라이트하우스를 사용해서 TBT 지표 확인하기 (Total Blocking Time)
   → 이미지에서 크게 개선된 총 차단 시간
+
+## 2. 사용하지 않는 dependency 제거하기
+
+- 새로운 기능을 구현하는 과정에서 여러 패키지를 추가한 경우
+  → PR에 모든 패키지가 정말 필요한지 확인해보자.
+- 쓸모 없는 종속성은 프로젝트 크기를 늘리고 설치 속도를 늦춘다.
+
+<aside>
+💡 [depcheck](https://www.npmjs.com/package/depcheck)
+
+프로젝트에 불필요한 종속성이 있는지 확인하는 유용한 도구
+프로젝트의 종속성을 분석하여 사용되지 않는 목록을 제공한다.
+
+</aside>
+
+## 3. 접근성 지원
+
+- 모든 사용자가 콘텐츠와 기능에 접근할 수 있도록 하는 것은 말할 필요도 없이 중요하다.
+- 따라서 이를 개발 과정에서도 반드시 염두해야한다.
+- 디지털 접근성(a11y) 이라는 주제는 매우 광범위하고, 더 좋은 UX를 위한 다양한 접근방식이 있다.
+
+### 📍 키보드 접근성 보장
+
+- 새로운 기능이 포함된 PR을 열기 전 간단한 접근성 테스트를 수행하기
+- 키보드 만으로도 기능을 사용할 수 있어야한다.
+  → 이는 마우스를 사용하지 않는 사용자에게 매우 중요하다!
+
+### 📍미디어 콘텐츠에 동반 텍스트 제공
+
+- 페이지에 단순 장식용 이미지가 아닌, 의미가 있는 이미지의 경우 화면 리더를 이용하는 사람들을 위해 콘텐츠를 보다 더 잘 이해할 수 있도록 이미지를 설명하는 간결한 대체 텍스트 제공하기
+
+```jsx
+-(<img src='images/contrast-comparison.jpg' alt='Contrast Comparison' />) +
+(
+  <img
+    src='images/contrast-comparison.jpg'
+    alt='On the left, there is a demonstration of low color contrast which makes words hard to read. On the right, higher color contrast makes the text easier to read.'
+  />
+);
+```
+
+### 📍 색상 대비가 높은 읽기 쉬운 글꼴 사용
+
+- 사용자 정의 글꼴을 사용할 경우 글꼴이 명확하기 읽히는지 확인하기
+- 글꼴 색 구성표를 염두하고 대비가 높고 뚜렷한 값을 선택하기
+
+💡 [더 자세한 접근성에 대하여](https://evilmartians.com/chronicles/accessible-design-from-the-get-go)
