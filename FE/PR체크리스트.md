@@ -119,3 +119,42 @@ Squoosh 같은 이미지 크기를 암축하고 줄여주는 웹앱 같은 것�
 - 글꼴 색 구성표를 염두하고 대비가 높고 뚜렷한 값을 선택하기
 
 💡 [더 자세한 접근성에 대하여](https://evilmartians.com/chronicles/accessible-design-from-the-get-go)
+
+## 4. 시맨틱 마크업 사용
+
+- 시맨틱 HTML은 화면 리더가 페이지를 더 잘 해석하기 때문에 사이트의 접근성을 향상 시키는 방법 중 하나
+- 검색 엔진이 해당 페이지의 콘텐츠와 구조를 더 효과적으로 인식하는 데 도움이 되어, 검색 순위를 높일 수 있다.
+
+<aside>
+💡 유용한 체크리스트
+
+[로그인 및 가입 양식을 위한 11가지 HTML 모범사례](https://evilmartians.com/chronicles/html-best-practices-for-login-and-signup-forms)
+[HTML의 시맨틱을 더욱 개선하기](https://web.dev/learn/html/semantic-html/)
+
+</aside>
+
+## 5. 불필요한 리렌더링 방지
+
+리액트를 웹개발을 하다 보면 정말 필연적으로 리렌더링이 발생한다.
+
+상태가 변경됨에 따라 UI를 업데이트 하는 프로세스이기때문이다.
+
+→ 상태 업데이트는 보통 웹페이지가 상호작용할 때 OR HTTP 요청을 통해 데이터를 수신할 때 발생한다.
+
+하지만, 때로는 쓸모없는 리렌더링이 발생할 수 있다.
+
+무한루프, 지저분한 애플리케이션 아키텍처로 인해 발생하거나, 단순 오류로 발생할 수 있다.
+
+이러한 경우 사용자가 인터페이스와 상호작용할 때 눈에 띄는 지연이 발생하는 것을 초래할 수 있다.
+
+💡 브라우저에서 리렌더링 되는 횟수 확인하기
+
+- 크롬 개발자 도구의 `렌더링` 탭에서 `페인트 깜빡임` 을 활성화
+- 이 옵션은 페이지의 섹션이 렌더링 될 때마다 편리한 시각화를 제공한다.
+- 따라서 리렌더링을 평가하는데 매우 편리하다 !
+
+💡 [리액트 hooks를 사용하면 성능에 부정적인 영향을 미치는 경우](https://kentcdodds.com/blog/usememo-and-usecallback)
+
+💡 [리액트에서 리렌더링이 발생하는 이유와 불필요한 리렌더링을 피하는 방법](https://www.joshwcomeau.com/react/why-react-re-renders/)
+
+💡 [useMemo와 useCallback 메모화 프로세스에 대한 완벽한 설명](https://www.joshwcomeau.com/react/usememo-and-usecallback/)
